@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": []
+	},
+	"lunarfunc_desc": "提供計算農曆功能",
+	"lunarfunc_format_error": "錯誤：無效的格式。",
+	"lunarfunc_time_error": "錯誤：無效時間。",
+	"lunarfunc_time_too_long": "錯誤：過多 #lunar 呼叫。",
+	"lunarfunc_time_too_big": "錯誤：#lunar 支援上限為 2100 年。",
+	"lunarfunc_time_too_small": "錯誤：#lunar 支援下限為 1900 年。"
+}
