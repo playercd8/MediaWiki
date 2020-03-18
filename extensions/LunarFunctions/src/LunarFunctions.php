@@ -3,7 +3,6 @@ namespace MediaWiki\Extensions\LunarFunctions;
 
 use Parser;
 use PPFrame;
-use PPNode;
 
 /**
  * Lunar function handlers
@@ -13,7 +12,6 @@ use PPNode;
 class LunarFunctions {
 	private static $mTimeCache = [];
 	private static $mTimeChars = 0;
-	private static $oCalendar = null;
 
 	/** ~10 seconds */
 	const MAX_TIME_CHARS = 6000;
@@ -43,15 +41,12 @@ class LunarFunctions {
 	 */
 	private static function ConvertToLunar($year, $month, $day, $hour) {
 	
-		if (isset($oCalendar) === false)
-			$oCalendar = new Calendar();
-		
-		$Lunar = $oCalendar->solar2lunar($year, $month, $day, $hour);
+	    $Lunar = Calendar::get_instance()->solar2lunar($year, $month, $day, $hour);
 
 		return $Lunar;
 	}
 	
-	private static function sprintfDate($format, $Lunar) {
+	private static function sprintfLunar($format, $Lunar) {
 		/*
 		$Lunar = [
             'lunar_year' => (string) $lunarYear,
@@ -106,7 +101,6 @@ class LunarFunctions {
 		$format = isset( $args[0] ) ? trim( $frame->expand( $args[0] ) ) : '';
 		$date = isset( $args[1] ) ? trim( $frame->expand( $args[1] ) ) : '';
 		
-		global $wgLocaltimezone;
 		self::registerClearHook();
 		
 		$invalidTime = false;
@@ -139,13 +133,9 @@ class LunarFunctions {
 				$frame->setTTL( $cachedVal[1] );
 			}
 
-			return self::sprintfDate($format, $cachedVal[0]);
+			return self::sprintfLunar($format, $cachedVal[0]);
 		}
 
-		# compute the timestamp string $ts
-		# PHP >= 5.2 can handle dates before 1970 or after 2038 using the DateTime object
-
-	
 
 		$ttl = null;
 		# format the timestamp and return the result
@@ -178,6 +168,6 @@ class LunarFunctions {
 		if ( $useTTL && $ttl !== null && $frame ) {
 			$frame->setTTL( $ttl );
 		}
-		return self::sprintfDate($format, $result);
+		return self::sprintfLunar($format, $result);
 	}
 }

@@ -14,7 +14,6 @@ class Hooks {
 	 * @param Parser $parser
 	 */
 	public static function onParserFirstCallInit( Parser $parser ) {
-		global $wgPFEnableStringFunctions;
 
 		// These functions accept DOM-style arguments
 		$class = LunarFunctions::class;

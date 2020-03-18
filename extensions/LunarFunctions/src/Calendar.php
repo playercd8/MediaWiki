@@ -62,54 +62,61 @@ class Calendar
      *
      * @var array
      */
-    protected $gan = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+    protected $gan = false;
+    //protected $gan = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
 
     /**
      * 天干地支之天干速查表 <=> 色彩.
      *
      * @var array
      */
-    protected $colors = ['青', '青', '红', '红', '黄', '黄', '白', '白', '黑', '黑'];
+    protected $colors = false;
+    //protected $colors = ['青', '青', '红', '红', '黄', '黄', '白', '白', '黑', '黑'];
 
     /**
      * 天干地支之天干速查表 <=> 五行.
      *
      * @var array
      */
-    protected $wuXing = ['木', '木', '火', '火', '土', '土', '金', '金', '水', '水'];
+    protected $wuXing = false;
+    //protected $wuXing = ['木', '木', '火', '火', '土', '土', '金', '金', '水', '水'];
 
     /**
      * 地支 <=> 五行.
      *
      * @var array
      */
-    protected $zhiWuxing = ['水', '土', '木', '木', '土', '火', '火', '土', '金', '金', '土', '水'];
+    protected $zhiWuxing = false;
+    //protected $zhiWuxing = ['水', '土', '木', '木', '土', '火', '火', '土', '金', '金', '土', '水'];
 
     /**
      * 天干地支之地支速查表.
      *
      * @var array
      */
-    protected $zhi = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+    protected $zhi = false;
+    //protected $zhi = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
 
     /**
      * 天干地支之地支速查表 <=> 生肖.
      *
      * @var array
      */
-    protected $animals = ['鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊', '猴', '鸡', '狗', '猪'];
+    protected $animals = false;
+    //protected $animals = ['鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊', '猴', '鸡', '狗', '猪'];
 
     /**
      * 24节气速查表.
      *
      * @var array
      */
-    protected $solarTerm = [
+    protected $solarTerm = false;
+    /*protected $solarTerm = [
         '小寒', '大寒', '立春', '雨水', '惊蛰', '春分',
         '清明', '谷雨', '立夏', '小满', '芒种', '夏至',
         '小暑', '大暑', '立秋', '处暑', '白露', '秋分',
         '寒露', '霜降', '立冬', '小雪', '大雪', '冬至',
-    ];
+    ];*/
 
     /**
      * 1900-2100 各年的 24 节气日期速查表.
@@ -191,22 +198,73 @@ class Calendar
      *
      * @var array
      */
-    protected $weekdayAlias = ['日', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
+    protected $weekdayAlias = false;
+    //protected $weekdayAlias = ['日', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
 
     /**
      * 日期转农历称呼速查表.
      *
      * @var array
      */
-    protected $dateAlias = ['初', '十', '廿', '卅'];
+    protected $dateAlias = false;
+    //protected $dateAlias = ['初', '十', '廿', '卅'];
 
     /**
      * 月份转农历称呼速查表.
      *
      * @var array
      */
-    protected $monthAlias = ['正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '冬', '腊'];
+    protected $monthAlias = false;
+    //protected $monthAlias = ['正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '冬', '腊'];
 
+    protected $constellations = false;
+    //$constellations = '魔羯水瓶双鱼白羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯';
+    
+    private function __construct() {
+
+		$this->gan = explode(",", wfMessage( 'lunarfunc_gan' )->inContentLanguage()->escaped());
+		if (count($this->gan) != 10) $this->gan=explode(",", "甲,乙,丙,丁,戊,己,庚,辛,壬,癸");
+		
+		$this->colors = explode(",", wfMessage( 'lunarfunc_colors' )->inContentLanguage()->escaped());
+		if (count($this->colors) != 10) $this->colors=explode(",", "青,青,紅,紅,黃,黃,白,白,黑,黑");
+		
+		$this->wuXing = explode(",", wfMessage( 'lunarfunc_wuXing' )->inContentLanguage()->escaped());
+		if (count($this->wuXing) != 10) $this->wuXing=explode(",", "木,木,火,火,土,土,金,金,水,水");
+		
+		$this->zhiWuxing = explode(",", wfMessage( 'lunarfunc_zhiWuxing' )->inContentLanguage()->escaped());
+		if (count($this->zhiWuxing) != 12) $this->zhiWuxing=explode(",", "水,土,木,木,土,火,火,土,金,金,土,水");
+		
+		$this->zhi = explode(",", wfMessage( 'lunarfunc_zhi' )->inContentLanguage()->escaped());
+		if (count($this->zhi) != 12) $this->zhi=explode(",", "子,丑,寅,卯,辰,巳,午,未,申,酉,戌,亥");
+		
+		$this->animals = explode(",", wfMessage( 'lunarfunc_animals' )->inContentLanguage()->escaped());
+		if (count($this->animals) != 12) $this->animals=explode(",", "鼠,牛,虎,兔,龍,蛇,馬,羊,猴,雞,狗,豬");
+		
+		$this->solarTerm = explode(",", wfMessage( 'lunarfunc_solarTerm' )->inContentLanguage()->escaped());
+		if (count($this->solarTerm) != 24) $this->solarTerm=explode(",", "小寒,大寒,立春,雨水,驚蟄,春分,清明,穀雨,立夏,小滿,芒種,夏至,小暑,大暑,立秋,處暑,白露,秋分,寒露,霜降,立冬,小雪,大雪,冬至");
+		
+		$this->weekdayAlias = explode(",", wfMessage( 'lunarfunc_weekdayAlias' )->inContentLanguage()->escaped());
+		if (count($this->weekdayAlias) != 11) $this->weekdayAlias=explode(",", "日,一,二,三,四,五,六,七,八,九,十");
+		
+		$this->dateAlias = explode(",", wfMessage( 'lunarfunc_dateAlias' )->inContentLanguage()->escaped());
+		if (count($this->dateAlias) != 4) $this->dateAlias=explode(",", "初,十,廿,卅");
+		
+		$this->monthAlias = explode(",", wfMessage( 'lunarfunc_monthAlias' )->inContentLanguage()->escaped());
+		if (count($this->monthAlias) != 12) $this->monthAlias=explode(",", "正,二,三,四,五,六,七,八,九,十,冬,臘");
+		
+		$this->constellations = explode(",", wfMessage( 'lunarfunc_constellations' )->inContentLanguage()->escaped());
+		if (count($this->constellations) != 13) $this->constellations=explode(",", "魔羯,水瓶,雙魚,白羊,金牛,雙子,巨蟹,獅子,處女,天秤,天蠍,射手,魔羯");
+    }
+	
+	private static $instance = false;
+	public static function get_instance()
+	{
+		if (self::$instance === false)
+			self::$instance = new Calendar();
+		
+		return self::$instance;
+	}
+    
     /**
      * 传入阳历年月日获得详细的公历、农历信息.
      *
@@ -393,16 +451,19 @@ class Calendar
      */
     public function toConstellation($gregorianMonth, $gregorianDay)
     {
-        //$constellations = '魔羯水瓶双鱼白羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯';
-		$constellations = '魔羯水瓶双魚白羊金牛双子巨蟹獅子處女天秤天蝎射手魔羯';
         $arr = [20, 19, 21, 21, 21, 22, 23, 23, 23, 23, 22, 22];
-
+        return  $this->constellations[$gregorianMonth - ($gregorianDay < $arr[$gregorianMonth - 1] ? 1 : 0)];
+        
+/*
+        $constellations = '魔羯水瓶双鱼白羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯';
+        $arr = [20, 19, 21, 21, 21, 22, 23, 23, 23, 23, 22, 22];
         return mb_substr(
             $constellations,
             $gregorianMonth * 2 - ($gregorianDay < $arr[$gregorianMonth - 1] ? 2 : 0),
             2,
             'UTF-8'
         );
+*/        
     }
 
     /**

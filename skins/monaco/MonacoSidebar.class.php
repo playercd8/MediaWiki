@@ -111,7 +111,6 @@ class MonacoSidebar {
 	public static function getMessageAsArray($messageKey) {
         $message = trim(wfMessage($messageKey)->inContentLanguage()->text());
 
-//TODO: MediaWiki 1.34.0 is not support
         if(!wfEmptyMsg($messageKey, $message)) {
                 $lines = explode("\n", $message);
                 if(count($lines) > 0) {
@@ -129,9 +128,6 @@ class MonacoSidebar {
 				if(empty($wgUser->mMonacoSidebar)) {
 					$wgUser->mMonacoSidebar = -1;
 				}
-//TODO: MediaWiki 1.34.0 is not support
-				//$wgUser->saveToCache();
-				$wgUser->saveSettings();
 			}
 			if($wgUser->mMonacoSidebar != -1) {
 				return $wgUser->mMonacoSidebar;
@@ -206,7 +202,8 @@ class MonacoSidebar {
 	}
 
 	public function getMenu($lines, $userMenu = false) {
-		global $wgMemc, $wgScript;
+		//global $wgMemc, $wgScript;
+	    global $wgMemc;
 
 		$nodes = $this->parse($lines);
 

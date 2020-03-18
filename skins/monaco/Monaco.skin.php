@@ -16,18 +16,26 @@ if(!defined('MEDIAWIKI')) {
 
 /**
  * Begin profiling of a function
- * @param string $functionname Name of the function we will profile
+ *
+ * @param string $functionname
+ *            Name of the function we will profile
  * @deprecated 1.25
  */
-function wfProfileIn( $functionname ) {
+function wfProfileIn($functionname)
+{
+    
 }
 
 /**
  * Stop profiling of a function
- * @param string $functionname Name of the function we have profiled
+ *
+ * @param string $functionname
+ *            Name of the function we have profiled
  * @deprecated 1.25
  */
-function wfProfileOut( $functionname = 'missing' ) {
+function wfProfileOut($functionname = 'missing')
+{
+    
 }
 
 /**
@@ -35,45 +43,42 @@ function wfProfileOut( $functionname = 'missing' ) {
  *
  * @param bool $end
  */
-function wfSuppressWarnings( $end = false ) {
-	static $suppressCount = 0;
-	static $originalLevel = false;
+function wfSuppressWarnings($end = false)
+{
+    static $suppressCount = 0;
+    static $originalLevel = false;
 
-	if ( $end ) {
-		if ( $suppressCount ) {
-			--$suppressCount;
-			if ( !$suppressCount ) {
-				error_reporting( $originalLevel );
-			}
-		}
-	} else {
-		if ( !$suppressCount ) {
-			$originalLevel = error_reporting( E_ALL & ~(
-				E_WARNING |
-				E_NOTICE |
-				E_USER_WARNING |
-				E_USER_NOTICE |
-				E_DEPRECATED |
-				E_USER_DEPRECATED |
-				E_STRICT
-			) );
-		}
-		++$suppressCount;
-	}
+    if ($end) {
+        if ($suppressCount) {
+            -- $suppressCount;
+            if (! $suppressCount) {
+                error_reporting($originalLevel);
+            }
+        }
+    } else {
+        if (! $suppressCount) {
+            $originalLevel = error_reporting(E_ALL & ~ (E_WARNING | E_NOTICE | E_USER_WARNING | E_USER_NOTICE | E_DEPRECATED | E_USER_DEPRECATED | E_STRICT));
+        }
+        ++ $suppressCount;
+    }
 }
 
 /**
  * Call hook functions defined in $wgHooks
  *
- * @param string $event Event name
- * @param array $args Parameters passed to hook functions
- * @param string|null $deprecatedVersion Optionally mark hook as deprecated with version number
- *
+ * @param string $event
+ *            Event name
+ * @param array $args
+ *            Parameters passed to hook functions
+ * @param string|null $deprecatedVersion
+ *            Optionally mark hook as deprecated with version number
+ *            
  * @return bool True if no handler aborted the hook
  * @deprecated 1.25 - use Hooks::run
  */
-function wfRunHooks( $event, array $args = array(), $deprecatedVersion = null ) {
-	return Hooks::run( $event, $args, $deprecatedVersion );
+function wfRunHooks($event, array $args = array(), $deprecatedVersion = null)
+{
+    return Hooks::run($event, $args, $deprecatedVersion);
 }
 
 /**
@@ -81,9 +86,10 @@ function wfRunHooks( $event, array $args = array(), $deprecatedVersion = null ) 
  *
  * @return BagOStuff
  */
-function wfGetParserCacheStorage() {
-	global $wgParserCacheType;
-	return ObjectCache::getInstance( $wgParserCacheType );
+function wfGetParserCacheStorage()
+{
+    global $wgParserCacheType;
+    return ObjectCache::getInstance($wgParserCacheType);
 }
 
 /**
@@ -92,35 +98,37 @@ function wfGetParserCacheStorage() {
  * Illegal control characters are assumed not to be present.
  *
  * @deprecated since 1.21; use Xml::encodeJsVar() or Xml::encodeJsCall() instead
- * @param string $string String to escape
+ * @param string $string
+ *            String to escape
  * @return string
  */
-function escapeJsString( $string ) {
-		// See ECMA 262 section 7.8.4 for string literal format
-		$pairs = array(
-			"\\" => "\\\\",
-			"\"" => "\\\"",
-			'\'' => '\\\'',
-			"\n" => "\\n",
-			"\r" => "\\r",
+function escapeJsString($string)
+{
+    // See ECMA 262 section 7.8.4 for string literal format
+    $pairs = array(
+        "\\" => "\\\\",
+        "\"" => "\\\"",
+        '\'' => '\\\'',
+        "\n" => "\\n",
+        "\r" => "\\r",
 
-			# To avoid closing the element or CDATA section
-			"<" => "\\x3c",
-			">" => "\\x3e",
+        // To avoid closing the element or CDATA section
+        "<" => "\\x3c",
+        ">" => "\\x3e",
 
-			# To avoid any complaints about bad entity refs
-			"&" => "\\x26",
+        // To avoid any complaints about bad entity refs
+        "&" => "\\x26",
 
-			# Work around https://bugzilla.mozilla.org/show_bug.cgi?id=274152
-			# Encode certain Unicode formatting chars so affected
-			# versions of Gecko don't misinterpret our strings;
-			# this is a common problem with Farsi text.
-			"\xe2\x80\x8c" => "\\u200c", // ZERO WIDTH NON-JOINER
-			"\xe2\x80\x8d" => "\\u200d", // ZERO WIDTH JOINER
-		);
+        // Work around https://bugzilla.mozilla.org/show_bug.cgi?id=274152
+        // Encode certain Unicode formatting chars so affected
+        // versions of Gecko don't misinterpret our strings;
+        // this is a common problem with Farsi text.
+        "\xe2\x80\x8c" => "\\u200c", // ZERO WIDTH NON-JOINER
+        "\xe2\x80\x8d" => "\\u200d" // ZERO WIDTH JOINER
+    );
 
-		return strtr( $string, $pairs );
-	}
+    return strtr($string, $pairs);
+}
 
 
 class SkinMonaco extends SkinTemplate {
@@ -202,7 +210,7 @@ class SkinMonaco extends SkinTemplate {
 	 * @param $out OutputPage
 	 */
 	function setupSkinUserCss( OutputPage $out ){
-		global $wgMonacoTheme, $wgMonacoAllowUsetheme, $wgRequest, $wgResourceModules;
+	    global $wgMonacoTheme, $wgMonacoAllowUsetheme, $wgRequest;
 
 		parent::setupSkinUserCss( $out );
 		
@@ -317,7 +325,7 @@ class SkinMonaco extends SkinTemplate {
 		$cache = $wgLang->getCode() == $wgContLang->getCode();
 
 		wfDebugLog('monaco', sprintf('Cache: %s, wgLang: %s, wgContLang %s', (int) $cache, $wgLang->getCode(), $wgContLang->getCode()));
-//TODO: MediaWiki 1.34.0 is not support
+
 		if($cache) {
 			$key = wfMemcKey('MonacoDataOld');
 			if (isset($parserMemc) === false)
@@ -330,7 +338,7 @@ class SkinMonaco extends SkinTemplate {
 			wfProfileIn(__METHOD__ . ' - DATA ARRAY');
 			$data_array['toolboxlinks'] = $this->getToolboxLinks();
 			wfProfileOut(__METHOD__ . ' - DATA ARRAY');
-//TODO: MediaWiki 1.34.0 is not support			
+		
 			if($cache) {
 				$parserMemc->set($key, $data_array, 4 * 60 * 60 /* 4 hours */);
 			}
@@ -352,9 +360,6 @@ class SkinMonaco extends SkinTemplate {
 					$wgUser->mMonacoData['toolboxlinks'] = $this->parseToolboxLinks($text);
 				}
 				wfProfileOut(__METHOD__ . ' - DATA ARRAY');
-//TODO: MediaWiki 1.34.0 is not support
-				//$wgUser->saveToCache();
-				$wgUser->saveSettings();
 			}
 
 			if($wgUser->mMonacoData['toolboxlinks'] !== false && is_array($wgUser->mMonacoData['toolboxlinks'])) {
@@ -660,7 +665,7 @@ class SkinMonaco extends SkinTemplate {
 	 */
 	private function getUserLinks($tpl) {
 		wfProfileIn( __METHOD__ );
-		global $wgUser, $wgTitle, $wgRequest;
+		global $wgUser, $wgRequest;
 
 		$data = array();
 
@@ -808,7 +813,8 @@ class MonacoTemplate extends BaseTemplate {
 
 	function execute() {
 		wfProfileIn( __METHOD__ );
-		global $wgContLang, $wgUser, $wgLogo, $wgStyleVersion, $wgRequest, $wgTitle, $wgSitename;
+
+		global $wgUser, $wgStyleVersion, $wgRequest, $wgTitle, $wgSitename;
 		global $wgMonacoUseSitenoticeIsland;
 
 		$skin = $this->data['skin'];
@@ -818,7 +824,6 @@ class MonacoTemplate extends BaseTemplate {
 		$this->set( 'blankimg', $this->data['stylepath'].'/monaco/style/images/blank.gif' );
 
 		// Suppress warnings to prevent notices about missing indexes in $this->data
-////TODO: MediaWiki 1.34.0 is not support		
 		wfSuppressWarnings();
 		
 		$this->setupRightSidebar();
@@ -924,14 +929,12 @@ wfProfileIn( __METHOD__ . '-body'); ?>
 
 				</article>
 				<!-- /ARTICLE -->
-				<?php
-
-			wfProfileOut( __METHOD__ . '-article'); ?>
+<?php			wfProfileOut( __METHOD__ . '-article'); ?>
 
 			<!-- ARTICLE FOOTER -->
-<?php		wfProfileIn( __METHOD__ . '-articlefooter'); ?>
-<?php
-global $wgTitle, $wgOut;
+<?php		wfProfileIn( __METHOD__ . '-articlefooter'); 
+
+global $wgTitle;
 $custom_article_footer = '';
 $namespaceType = '';
 wfRunHooks( 'CustomArticleFooter', array( &$this, &$tpl, &$custom_article_footer ));

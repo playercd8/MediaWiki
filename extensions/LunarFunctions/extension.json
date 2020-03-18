@@ -1,7 +1,7 @@
 {
 	"name": "LunarFunctions",
 	"author": "player",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"url": "https://www.mediawiki.org/wiki/Extension:LunarFunctions",
 	"descriptionmsg": "lunarfunc_desc",
 	"license-name": "MIT",
@@ -16,11 +16,6 @@
 	},
 	"ExtensionMessagesFiles": {
 		"LunarDateMagic": "LunarFunctions.i18n.magic.php"
-	},
-	"MessagesDirs": {
-		"LunarFunctions": [
-			"i18n"
-		]
 	},
 	"Hooks": {
 		"ParserFirstCallInit": [

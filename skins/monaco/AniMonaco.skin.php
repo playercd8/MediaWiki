@@ -101,11 +101,11 @@ class AniMonacoTemplate extends MonacoTemplate {
 	var reddit_title = "<?php echo Xml::escapeJsString( "{$wgTitle->getPrefixedText()} - $wgSitename" ); ?>";
 	</script>
 	<div class="widget sidebox sharebox">
-		<table border=0 style="width: 100%;">
+		<table style="border-width: 0px; width: 100%;">
 		<tr>
 			<td></td>
 			<td><fb:like href="<?php echo $eurl ?>" layout="box_count" width="50" font="arial"></fb:like></td>
-			<td><a href="http://twitter.com/share" class="twitter-share-button" data-url="<?php echo $eurl ?>" data-text="<?php echo htmlspecialchars("{$wgTitle->getPrefixedText()} on the $wgSitename"); ?>" data-count="vertical"<?php if ( $egTwitterName ) echo' data-via="'.htmlspecialchars($egTwitterName).'"'; ?>>Tweet</a></script></td>
+			<td><a href="http://twitter.com/share" class="twitter-share-button" data-url="<?php echo $eurl ?>" data-text="<?php echo htmlspecialchars("{$wgTitle->getPrefixedText()} on the $wgSitename"); ?>" data-count="vertical"<?php if ( $egTwitterName ) echo' data-via="'.htmlspecialchars($egTwitterName).'"'; ?>>Tweet</a></td>
 			<td></td>
 		</tr>
 		<tr>
