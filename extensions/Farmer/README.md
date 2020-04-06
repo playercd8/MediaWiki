@@ -45,7 +45,7 @@ $wgFarmerSettings['databaseName'] = $wgDBname;
 $wgFarmerSettings['dbTablePrefixSeparator'] = '_';
 
 $wgFarmerSettings['newDbSourceFile'] = realpath( dirname( __FILE__ ) ) . '/maintenance/tables.sql';
-$wgFarmerSettings['defaultWiki'] = "mw"; # Change it to one you want required by default
+$wgFarmerSettings['defaultWiki'] = substr($wgDBprefix,0,strlen($wgDBprefix)-1); # Change it to one you want required by default
 
 $wgFarmerSettings['scriptUrl'] = '/$1';
 $wgFarmerSettings['styleUrl'] = '/$1/skins';

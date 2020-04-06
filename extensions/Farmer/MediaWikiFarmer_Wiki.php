@@ -299,11 +299,14 @@ class MediaWikiFarmer_Wiki {
 		
 		$wikiName = $this->name;
 		
+		if ($wikiName == $farmer->defaultWiki) 
+		    $wikiName = 'wiki';
+		
 		$wgScriptPath = str_replace("$1", $wikiName, $farmer->scriptUrl);
 		$wgStylePath = str_replace("$1", $wikiName, $farmer->styleUrl);
 		
-		$wgUploadDirectory = str_replace("$1", $wikiName, $farmer->updatePath);
-		$wgUploadPath = str_replace("$1", $wikiName, $farmer->updateUrl);
+		$wgUploadDirectory = str_replace("$1", $wikiName, $farmer->uploadPath);
+		$wgUploadPath = str_replace("$1", $wikiName, $farmer->uploadUrl);
 	
 		$tmpDir = str_replace("$1", $wikiName, $farmer->tmpPath);
 		if (is_dir($tmpDir) == false)
@@ -319,29 +322,6 @@ class MediaWikiFarmer_Wiki {
 	        $wgDBprefix = $wikiName . $farmer->dbTablePrefixSeparator;
 	    }
 	
-		/*
-		global $IP, $wgServer, $wgScriptPath, $wgStylePath, $wgUploadDirectory, $wgUploadPath;
-		if ( $farmer->useWgConf() ) {
-			// Nothing for now
-		} else {
-			$wgSitename = $this->_title;
-
-			// We initialize the per-wiki storage root and all related global variables
-			$wikiDir = $farmer->getStorageRoot() . $this->name . '/';
-			$wikiPath = $farmer->getStorageUrl() . $this->name . '/';
-
-			$wgUploadDirectory = $wikiDir . 'uploads';
-			$wgMathDirectory = $wikiDir . 'math';
-			$wgTmpDirectory = $wikiDir . 'tmp';
-
-			$wgUploadPath = $wikiPath . 'uploads';
-			$wgMathPath = $wikiPath . 'math';
-			$wgTmpPath = $wikiPath . 'tmp';
-
-			// DB settings
-			list( $wgDBname, $wgDBprefix ) = $farmer->splitWikiDB( $this->name );
-		}
-		*/
 
 		// we allocate permissions to the necessary groups
 

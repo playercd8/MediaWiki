@@ -433,7 +433,7 @@ class MediaWikiFarmer {
 	 */
 	public static function userCanCreateWiki( $user, $wiki = null ) {
 		//return $user->isAllowed( 'createwiki' );
-		MediaWikiServices::getInstance()->getPermissionManager()->userHasRight( $user, 'createwiki' );
+		return MediaWikiServices::getInstance()->getPermissionManager()->userHasRight( $user, 'createwiki' );
 		
 	    //return $user->isLoggedIn();
 	}
@@ -446,7 +446,7 @@ class MediaWikiFarmer {
 	 */
 	public static function userIsFarmerAdmin( $user ) {
 		//return $user->isAllowed( 'farmeradmin' );
-	    MediaWikiServices::getInstance()->getPermissionManager()->userHasRight( $user, 'farmeradmin' );
+	    return MediaWikiServices::getInstance()->getPermissionManager()->userHasRight( $user, 'farmeradmin' );
 	}
 
 	# Extensions stuff
