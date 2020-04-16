@@ -150,6 +150,19 @@ class MediaWikiFarmer_Wiki {
         return $wiki;
     }
 
+    protected $tmpDBprefix;
+    public function pushDBprefix(string $newDBprefix)
+    {
+        global $wgDBprefix;
+        $this->tmpDBprefix = $wgDBprefix;
+        return $newDBprefix;
+    }
+    
+    public function popDBprefix()
+    {
+        return $this->tmpDBprefix;
+    }
+    
     public function create()
     {
         $farmer = MediaWikiFarmer::getInstance();
@@ -161,24 +174,19 @@ class MediaWikiFarmer_Wiki {
         if (! $this->exists() && ! $this->databaseExists()) {
             global $wgDBprefix, $wgDBname;
             
-            //push $wgDBprefix
-            $wgDBprefix_tmp = $wgDBprefix;
-            $wgDBprefix = $this->_name . $farmer->dbTablePrefixSeparator;
+            $wgDBprefix = $this->pushDBprefix($this->_name . $farmer->dbTablePrefixSeparator);
             
             $db2 = $this->getDatabase();
             $db2->tablePrefix($wgDBprefix);
-            $db2->selectDB($wgDBname);
-            //
+            $db2->selectDomain($wgDBname);
+
             $this->save();
             $this->createDatabase();
             $farmer->updateFarmList();
             
-            //pop $wgDBprefix
-            $wgDBprefix = $wgDBprefix_tmp;
             $db2->tablePrefix($wgDBprefix);
         } else {
-            throw new MWException(wfMessage('farmer-error-exists')->rawParams($this->_name )->escaped()
-			);
+            throw new MWException(wfMessage('farmer-error-exists')->rawParams($this->_name )->escaped());
 		}
 	}
 
@@ -320,8 +328,7 @@ class MediaWikiFarmer_Wiki {
 	        $wgDBprefix = $farmer->defaultWiki . $farmer->dbTablePrefixSeparator;
 	    } else {
 	        $wgDBprefix = $wikiName . $farmer->dbTablePrefixSeparator;
-	    }
-	
+	    }	
 
 		// we allocate permissions to the necessary groups
 
@@ -612,7 +619,13 @@ class MediaWikiFarmer_Wiki {
 	 */
 	protected function _populateInterwiki() {
 
+	    $farmer = MediaWikiFarmer::getInstance();
+	    global $wgDBprefix;
+	    $wgDBprefix = $this->pushDBprefix($this->defaultWiki . $farmer->dbTablePrefixSeparator);
+	    
 		$db = $this->getDatabase();
+		$db->tablePrefix($wgDBprefix);
+		
 		$db->insert(
 			'interwiki',
 			[
@@ -623,6 +636,9 @@ class MediaWikiFarmer_Wiki {
 			__METHOD__,
 			[ 'IGNORE' ]
 		);
+		
+		$wgDBprefix = $this->popDBprefix();
+		$db->tablePrefix($wgDBprefix);
 	}
 	
 	protected function _populateUserGroups() {

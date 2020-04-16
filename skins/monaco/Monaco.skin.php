@@ -589,7 +589,7 @@ class SkinMonaco extends SkinTemplate {
 					$msgKey = $kk;
 					if ( $kk == "edit" ) {
 						$title = $this->getRelevantTitle();
-						$msgKey = $title->exists() || ( $title->getNamespace() == NS_MEDIAWIKI && !wfEmptyMsg( $title->getText() ) )
+						$msgKey = $title->exists() || ( $title->getNamespace() == NS_MEDIAWIKI && !(MessageCache::singleton()->get( $title->getText(), true, false ) === false) )
 							? "edit" : "create";
 					}
 					
@@ -689,7 +689,7 @@ class SkinMonaco extends SkinTemplate {
 				);
 
 			$data['register'] = array(
-				'text' => wfMessage('nologinlink')->text(),
+			    'text' => wfMessage('createaccount')->text(),
 				'href' => $signUpHref . "&type=signup"
 				);
 

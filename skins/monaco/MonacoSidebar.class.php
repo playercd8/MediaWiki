@@ -13,22 +13,6 @@ if(!defined('MEDIAWIKI')) {
 	die(-1);
 }
 
-/**
- * Since wfMsg() and co suck, they don't return false if the message key they
- * looked up didn't exist but instead the key wrapped in <>'s, this function checks for the
- * nonexistence of messages by checking the MessageCache::get() result directly.
- *
- * @deprecated since 1.18. Use Message::isDisabled().
- *
- * @param string $key The message key looked up
- * @return bool True if the message *doesn't* exist.
- */
-function wfEmptyMsg( $key ) {
-	wfDeprecated( __METHOD__, '1.21' );
-
-	return MessageCache::singleton()->get( $key, /*useDB*/true, /*content*/false ) === false;
-}
-
 class MonacoSidebar {
 
 	const version = '0.10';
@@ -111,7 +95,7 @@ class MonacoSidebar {
 	public static function getMessageAsArray($messageKey) {
         $message = trim(wfMessage($messageKey)->inContentLanguage()->text());
 
-        if(!wfEmptyMsg($messageKey, $message)) {
+        if(!(MessageCache::singleton()->get( $messageKey, true, false ) === false)) {
                 $lines = explode("\n", $message);
                 if(count($lines) > 0) {
                         return $lines;

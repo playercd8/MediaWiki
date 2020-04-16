@@ -432,10 +432,7 @@ class MediaWikiFarmer {
 	 * @return bool
 	 */
 	public static function userCanCreateWiki( $user, $wiki = null ) {
-		//return $user->isAllowed( 'createwiki' );
 		return MediaWikiServices::getInstance()->getPermissionManager()->userHasRight( $user, 'createwiki' );
-		
-	    //return $user->isLoggedIn();
 	}
 
 	/**
@@ -445,7 +442,6 @@ class MediaWikiFarmer {
 	 * @return bool
 	 */
 	public static function userIsFarmerAdmin( $user ) {
-		//return $user->isAllowed( 'farmeradmin' );
 	    return MediaWikiServices::getInstance()->getPermissionManager()->userHasRight( $user, 'farmeradmin' );
 	}
 
