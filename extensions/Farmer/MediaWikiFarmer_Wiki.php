@@ -184,6 +184,7 @@ class MediaWikiFarmer_Wiki {
             $this->createDatabase();
             $farmer->updateFarmList();
             
+            $wgDBprefix = $this->popDBprefix();
             $db2->tablePrefix($wgDBprefix);
         } else {
             throw new MWException(wfMessage('farmer-error-exists')->rawParams($this->_name )->escaped());
@@ -286,6 +287,9 @@ class MediaWikiFarmer_Wiki {
 	 * use this wiki
 	 */
 	public function initialize() {
+	    
+	    global $wgSkipSkins, $wgDefaultWiki, $wgScriptPath, $wgStylePath, $wgUploadDirectory, $wgUploadPath, $wgTmpDirectory, $wgGroupPermissions;
+	    
 		// loop over defined variables and set them in the global scope
 		foreach ( $this->_variables as $k => $v ) {
 			$GLOBALS[$k] = $v;
@@ -293,6 +297,19 @@ class MediaWikiFarmer_Wiki {
 
 		// we need to bring some global variables into scope so we can load extensions properly
 		extract( $GLOBALS, EXTR_REFS );
+		
+		$farmer = MediaWikiFarmer::getInstance();
+		
+		//fix skin
+		$skins = Skin::getSkinNames();
+		foreach ( $wgSkipSkins as $skin ) {
+		    if ( array_key_exists( $skin, $skins ) ) {
+		        unset( $skins[$skin] );
+		    }
+		}
+		if (array_key_exists($wgDefaultWiki, $skins) == false) {
+		    $wgDefaultWiki = $farmer->defaultSkin;
+		}
 
 		// register all the extensions
 		foreach ( $this->_extensions as $extension ) {
@@ -300,30 +317,35 @@ class MediaWikiFarmer_Wiki {
 				require_once $file;
 			}
 		}
-
-		$farmer = MediaWikiFarmer::getInstance();
-		
-		global $wgScriptPath, $wgStylePath, $wgUploadDirectory, $wgUploadPath, $wgTmpDirectory, $wgGroupPermissions;
-		
+	
+		//fix $wikiName
 		$wikiName = $this->name;
-		
 		if ($wikiName == $farmer->defaultWiki) 
 		    $wikiName = 'wiki';
 		
+	    //fix $wgScriptPath
 		$wgScriptPath = str_replace("$1", $wikiName, $farmer->scriptUrl);
+		
+		//fix $wgStylePath
 		$wgStylePath = str_replace("$1", $wikiName, $farmer->styleUrl);
 		
+		//fix $wgUploadDirectory
 		$wgUploadDirectory = str_replace("$1", $wikiName, $farmer->uploadPath);
+		
+		//fix $wgUploadPath
 		$wgUploadPath = str_replace("$1", $wikiName, $farmer->uploadUrl);
 	
+		//fix $wgTmpDirectory
 		$tmpDir = str_replace("$1", $wikiName, $farmer->tmpPath);
 		if (is_dir($tmpDir) == false)
 		    mkdir($tmpDir,0777,true);
 	    $wgTmpDirectory = $tmpDir;
 		    
+	    //fix $wgLogo
 		if (file_exists(str_replace("$1", $wikiName, $farmer->logoPath)))
 		    $wgLogo = str_replace("$1", $wikiName, $farmer->logoUrl);
-		    
+		
+	    //fix $wgDBprefix
 	    if ($wikiName == 'wiki') {
 	        $wgDBprefix = $farmer->defaultWiki . $farmer->dbTablePrefixSeparator;
 	    } else {

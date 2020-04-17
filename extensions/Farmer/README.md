@@ -53,6 +53,7 @@ $wgFarmerSettings['uploadPath'] = dirname($IP) . '/wikis/$1/images';
 $wgFarmerSettings['uploadUrl'] = '/wikis/$1/images';
 $wgFarmerSettings['tmpPath'] = dirname($IP) . '/tmp/wikis/$1';
 $wgFarmerSettings['interwikiUrl'] = $wgServer . '/$1/index.php/';
+$wgFarmerSettings['defaultSkin'] = $wgDefaultSkin;
 
 //File:Wiki.png
 $wgFarmerSettings['logoPath'] = dirname($IP) . '/wikis/$1/images/b/bc/Wiki.png';

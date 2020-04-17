@@ -339,13 +339,17 @@ class SpecialFarmer extends SpecialPage {
 		$wgOut->wrapWikiMsg( "== $1 ==", 'farmer-listofwikis' );
 		$current = $wgFarmer->getActiveWiki()->name;
 
+		$index = 1;
+		
 		foreach ( $list as $wiki ) {
 			$link = ( $current == $wiki['name'] ? wfMessage(
 				'mainpage'
 			)->inContentLanguage()->text() : $wiki['name'] . ':' );
 			$this->outputWikiText(
-				$wgOut, '; [[' . $link . '|' . $wiki['title'] . ']] : ' . $wiki['description']
+				$wgOut, ';'.$index.'. [[' . $link . '|' . $wiki['title'] . ']] : ' . $wiki['description']
 			);
+			
+			$index += 1;
 		}
 	}
 
