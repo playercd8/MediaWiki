@@ -7,10 +7,13 @@
  * @author Gregory Szorc <gregory.szorc@gmail.com>
  */
 
+
 /**
  *
  * @todo Move presentation text into MW messages
  */
+use MediaWiki\MediaWikiServices;
+
 class SpecialFarmer extends SpecialPage {
 	public function __construct() {
 		parent::__construct( 'Farmer' );
@@ -113,7 +116,7 @@ class SpecialFarmer extends SpecialPage {
 	 */
 	protected function _executeCreate( $wgFarmer, $wiki ) {
 
-		global $wgOut, $wgUser, $wgRequest;
+	    global $wgOut, $wgUser, $wgRequest, $wgLanguageCode;
 
 		if ( !$wgFarmer->getActiveWiki()->isDefaultWiki() ) {
 			$wgOut->wrapWikiMsg( '== $1 ==', 'farmer-notavailable' );
@@ -125,9 +128,17 @@ class SpecialFarmer extends SpecialPage {
 			$wgOut->addWikiMsg( 'farmercantcreatewikis' );
 			return;
 		}
+		
+		//$languages = Language::fetchLanguageNames( null, 'mwfile' );
+		$languages =  MediaWikiServices::getInstance()->getLanguageNameUtils()->getLanguageNames( null, 'mwfile' );
 
 		$name = MediaWikiFarmer_Wiki::sanitizeName( $wgRequest->getVal( 'wpName', $wiki ) );
 		$title = MediaWikiFarmer_Wiki::sanitizeTitle( $wgRequest->getVal( 'wpTitle' ) );
+		$languageCode = $wgRequest->getVal( 'wpLanguage', $wgLanguageCode );
+		if ( array_key_exists( $languageCode, $languages ) ) {
+		    $wgLanguageCode = $languageCode;
+		}
+
 		$description = $wgRequest->getVal( 'wpDescription', '' );
 		$reason = $wgRequest->getVal( 'wpReason' );
 		$action = $this->getPageTitle( 'create' )->getLocalURL();
@@ -137,8 +148,10 @@ class SpecialFarmer extends SpecialPage {
 			// we create the wiki if the user pressed 'Confirm'
 			if ( $wgRequest->getCheck( 'wpConfirm' ) ) {
 				$wikiObj = MediaWikiFarmer_Wiki::newFromParams(
-					$name, $title, $description, $wgUser->getName()
+					$name, $title, $description, $wgUser->getName(),
+					['wgLanguageCode'=>$wgLanguageCode]
 				);
+				//$wikiObj['wgLanguageCode'] = $wgLanguageCode;
 				$wikiObj->create();
 
 				$log = new LogPage( 'farmer' );
@@ -177,6 +190,10 @@ class SpecialFarmer extends SpecialPage {
 						wfMessage(
 							'farmer-confirmsetting-title'
 						)->parse() ) . Xml::element( 'td', [], $title ) ) . "\n" .
+				    Xml::tags( 'tr', [], Xml::tags( 'th', [],
+				        wfMessage(
+				            'farmer-confirmsetting-language'
+				            )->parse() ) . Xml::element( 'td', [], $wgLanguageCode ) ) . "\n" .
 					Xml::tags( 'tr', [], Xml::tags( 'th', [],
 						wfMessage(
 							'farmer-confirmsetting-description'
@@ -198,6 +215,7 @@ class SpecialFarmer extends SpecialPage {
 <form id=\"farmercreate2\" method=\"post\" action=\"$action\">
 <input type=\"hidden\" name=\"wpName\" value=\"{$nameaccount}\" />
 <input type=\"hidden\" name=\"wpTitle\" value=\"{$nametitle}\" />
+<input type=\"hidden\" name=\"wpLanguage\" value=\"{$wgLanguageCode}\" />
 <input type=\"hidden\" name=\"wpDescription\" value=\"{$namedescript}\" />
 <input type=\"hidden\" name=\"wpReason\" value=\"{$reason}\" />
 <input type=\"submit\" name=\"wpConfirm\" value=\"{$confirmaccount}\" />
@@ -228,6 +246,12 @@ class SpecialFarmer extends SpecialPage {
 
 		$token = htmlspecialchars( $wgUser->getEditToken() );
 
+		$select = new XmlSelect( 'wpLanguage', 'wpLanguage', $wgLanguageCode );
+		foreach ( $languages as $code => $lang ) {
+		    $select->addOption( "$code - $lang", $code );
+		}
+
+		
 		$wgOut->addHTML(
 			Xml::openElement( 'form', [ 'method' => 'post', 'action' => $action ] ) . "\n" .
 			Xml::buildForm(
@@ -235,6 +259,7 @@ class SpecialFarmer extends SpecialPage {
 					'farmer-createwiki-user' => Xml::element( 'b', [], $wgUser->getName() ),
 					'farmer-createwiki-name' => Xml::input( 'wpName', 20, $name ),
 					'farmer-createwiki-title' => Xml::input( 'wpTitle', 20, $title ),
+				    'farmer-createwiki-language' =>  $select->getHTML(),
 					'farmer-createwiki-description' => Xml::textarea( 'wpDescription', $description ),
 					'farmer-createwiki-reason' => Xml::input( 'wpReason', 20, $reason ),
 				], 'farmer-button-submit'
