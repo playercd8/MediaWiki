@@ -6,7 +6,7 @@ This extension works well with old PHP versions. The simplepie framework is depr
 
 ## Prerequisites
 SimpleFeed needs following prerequisites:
- 1. MediaWiki 1.23
+ 1. MediaWiki 1.35.1
 
 ## Installation
 

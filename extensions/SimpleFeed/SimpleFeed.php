@@ -63,7 +63,7 @@ function parseFeed($input, $args, $parser)
 	global $wgSimpleFeed_Cache;
 
 	// Disable page caching.
-	$parser->disableCache();
+	$parser->getOutput()->updateCacheExpiry(0);		//$parser->disableCache();
 	
 	// Check to see whether SimplePie was actually included.
 	if (defined('SIMPLEPIE_NOT_FOUND'))
